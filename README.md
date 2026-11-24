@@ -7,6 +7,8 @@
 >
 > [Read about the modifications](UKRAINIAN-GLASS-MOD.md)
 >
+> [SonixOS UPT Repacker v0.4.0](docs/REPACKING.md)
+>
 > Based on CookieCaptainD's November 18, 2026 integration build.
 
 ---
