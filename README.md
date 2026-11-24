@@ -1,11 +1,11 @@
-> ## Ukrainian Glass Animation Mod
+> ## SonixOS — Ukrainian Mod v1.0.0 for HiBy R1
 >
 > This branch contains an unofficial community modification
 > for the HiBy R1, featuring animated glass power menu sliders,
 > Ukrainian QWERTY and T9 keyboard improvements,
 > and updated Ukrainian translations.
 >
-> [Read about the modifications](UKRAINIAN-GLASS-MOD.md)
+> [Read about the modifications](UKRAINIAN-MOD.md)
 >
 > [SonixOS UPT Repacker v0.4.0](docs/REPACKING.md)
 
@@ -16,7 +16,7 @@
 </p>
 
 <p align="center">
-  <a href="UKRAINIAN-GLASS-MOD.md#demonstration">
+  <a href="UKRAINIAN-MOD.md#demonstration">
     View all demonstrations
   </a>
 </p>

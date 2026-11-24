@@ -1,4 +1,4 @@
-# SonixOS — Ukrainian Glass Animation Mod
+# SonixOS — Ukrainian Mod v1.0.0 for HiBy R1
 
 An unofficial community modification of SonixOS 1.3.0
 for the HiBy R1 digital audio player.
@@ -10,7 +10,7 @@ build from November 18, 2026.
 
 - Base branch: integration/r1-all-cookiecaptaind
 - Base commit: 225623c94302fc3e3d67a34eab0ca78dc7ab584f
-- Modified branch: ukrainian-glass-mod
+- Modified branch: ukrainian-mod
 - Target device: HiBy R1
 
 ## Animated glass power menu
@@ -155,7 +155,7 @@ CookieCaptainD, and all community contributors.
 Original integration project:
 https://github.com/CookieCaptainD/sonix-player
 
-Ukrainian Glass Animation Mod:
+Ukrainian Mod:
 https://github.com/navitanh-hash/sonix-player
 
 Feedback, suggestions and contributions are welcome.

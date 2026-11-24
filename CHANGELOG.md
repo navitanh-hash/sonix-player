@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to the Ukrainian Glass Animation Mod
+All notable changes to the Ukrainian Mod
 are documented in this file.
 
 ## [1.0.0] - 2026-11-24
