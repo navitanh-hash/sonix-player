@@ -5,7 +5,7 @@ are documented in this file.
 
 ## [1.0.0] - 2026-11-24
 
-Initial experimental community version for the HiBy R1.
+Initial community release for the HiBy R1.
 
 ### Added
 
@@ -43,7 +43,7 @@ Initial experimental community version for the HiBy R1.
 
 ### Known limitations
 
-- Physical-device testing has not yet been reported.
+- Physical HiBy R1 testing completed successfully. All tested functions are working correctly.
 - Long-press variants use a shared keyboard variant table.
 - Full firmware redistribution rights have not been verified.
 

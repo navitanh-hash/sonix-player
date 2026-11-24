@@ -182,7 +182,7 @@ creation timestamp.
 - Only one specifically tested base firmware is supported.
 - Other HiBy models are not supported.
 - Other versions of SquashFS Tools have not been tested.
-- Physical-device compatibility has not been confirmed.
+- The modified firmware has been successfully tested on a physical HiBy R1. Compatibility with other firmware builds or hardware revisions is not guaranteed.
 - Static verification cannot guarantee successful booting.
 - Byte-for-byte reproducible ISO output is not guaranteed.
 

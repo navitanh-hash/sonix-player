@@ -1,5 +1,8 @@
 > ## SonixOS — Ukrainian Mod v1.0.0 for HiBy R1
 >
+> **Hardware testing:** Successfully tested on a physical HiBy R1.
+> All tested functions are working correctly.
+>
 > This branch contains an unofficial community modification
 > for the HiBy R1, featuring animated glass power menu sliders,
 > Ukrainian QWERTY and T9 keyboard improvements,

@@ -110,7 +110,7 @@ Tested build environment:
 
 ## Verification
 
-The experimental firmware image was produced by replacing
+The modified firmware image was produced by replacing
 only the sonix_player executable inside an existing
 working HiBy R1 SonixOS firmware image.
 
@@ -130,11 +130,11 @@ Verification results:
 - RootFS NAND reserve: 20 erase blocks.
 - Kernel NAND reserve: 17 erase blocks.
 
-Physical-device testing: not yet reported.
+Physical HiBy R1 testing: passed. All tested functions are working correctly.
 
 ## Important
 
-This is an unofficial experimental modification,
+This is an unofficial community modification,
 not an official HiBy firmware release.
 
 Firmware installation carries a risk of rendering
@@ -185,4 +185,4 @@ and resumes after an incomplete swipe.
 | Long-press support for Ґ / ґ | Complete Ukrainian alphabet | Shortened Ukrainian translation |
 
 These demonstrations show the host simulator.
-Physical-device compatibility has not yet been confirmed.
+The modified firmware has also been successfully tested on a physical HiBy R1 device.
