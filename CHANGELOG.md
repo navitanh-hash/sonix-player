@@ -41,9 +41,12 @@ Initial community release for the HiBy R1.
 - Kernel modules: 30 checked, zero mismatches.
 - CookieCaptainD firmware verification: passed.
 
-### Known limitations
+### Hardware verification
 
 - Physical HiBy R1 testing completed successfully. All tested functions are working correctly.
+
+### Known limitations
+
 - Long-press variants use a shared keyboard variant table.
 - Full firmware redistribution rights have not been verified.
 
