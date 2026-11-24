@@ -1102,6 +1102,11 @@ static void rtc_alarm_arm(void) {
 }
 
 void power_shutdown(void) {
+#ifdef HOST_BUILD
+    printf("[HOST TEST] Automatic shutdown blocked.\n");
+    return;
+#endif
+
 	// Where the music had got to, before anything else stops. The player's own
 	// poll writes this only every ten seconds while playing and on a change of
 	// state, so without this flush a power-off loses up to ten seconds -- and a
