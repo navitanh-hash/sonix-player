@@ -1,3 +1,16 @@
+> ## Ukrainian Glass Animation Mod
+>
+> This branch contains an unofficial community modification
+> for the HiBy R1, featuring animated glass power menu sliders,
+> Ukrainian QWERTY and T9 keyboard improvements,
+> and updated Ukrainian translations.
+>
+> [Read about the modifications](UKRAINIAN-GLASS-MOD.md)
+>
+> Based on CookieCaptainD's November 18, 2026 integration build.
+
+---
+
 ﻿# Sonix Player
 
 A replacement player for the **HiBy R3 Pro II** and the **HiBy R1**, written on
