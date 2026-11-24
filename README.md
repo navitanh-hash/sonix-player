@@ -8,6 +8,19 @@
 > [Read about the modifications](UKRAINIAN-GLASS-MOD.md)
 >
 > [SonixOS UPT Repacker v0.4.0](docs/REPACKING.md)
+
+<p align="center">
+  <img src="docs/media/power-menu-animation.gif"
+       width="240"
+       alt="Animated glass power menu for HiBy R1">
+</p>
+
+<p align="center">
+  <a href="UKRAINIAN-GLASS-MOD.md#demonstration">
+    View all demonstrations
+  </a>
+</p>
+
 >
 > Based on CookieCaptainD's November 18, 2026 integration build.
 

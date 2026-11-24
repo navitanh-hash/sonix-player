@@ -159,3 +159,30 @@ Ukrainian Glass Animation Mod:
 https://github.com/navitanh-hash/sonix-player
 
 Feedback, suggestions and contributions are welcome.
+
+## Demonstration
+
+The following demonstrations were captured directly
+from the SDL2 host simulator running the modified
+Sonix Player interface at the native HiBy R1
+resolution of 480 x 800 pixels.
+
+### Animated Glass Power Menu
+
+| Automatic animation | Touch interaction |
+| :---: | :---: |
+| <img src="docs/media/power-menu-animation.gif" width="240"> | <img src="docs/media/power-menu-interaction.gif" width="240"> |
+
+The translucent ghost sliders demonstrate the direction
+of movement. The animation pauses during user interaction
+and resumes after an incomplete swipe.
+
+### Ukrainian Language Improvements
+
+| Ukrainian QWERTY | Ukrainian T9 | USB wake setting |
+| :---: | :---: | :---: |
+| <img src="docs/media/ukrainian-qwerty.png" width="180"> | <img src="docs/media/ukrainian-t9.png" width="180"> | <img src="docs/media/ukrainian-usb-wake.png" width="180"> |
+| Long-press support for Ґ / ґ | Complete Ukrainian alphabet | Shortened Ukrainian translation |
+
+These demonstrations show the host simulator.
+Physical-device compatibility has not yet been confirmed.
