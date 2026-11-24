@@ -3,6 +3,39 @@
 > **Hardware testing:** Successfully tested on a physical HiBy R1.
 > All tested functions are working correctly.
 >
+
+<!-- UKRAINIAN MOD DOWNLOAD SECTION -->
+
+<p align="center">
+  <a href="https://github.com/navitanh-hash/sonix-player/releases/latest">
+    <img src="https://img.shields.io/github/v/release/navitanh-hash/sonix-player?label=release&color=blue" alt="Latest release">
+  </a>
+  <img src="https://img.shields.io/badge/hardware%20test-passed-brightgreen" alt="Hardware testing passed">
+  <img src="https://img.shields.io/github/downloads/navitanh-hash/sonix-player/v1.0.0-ukrainian-mod/SonixOS-Ukrainian-Mod-v1.0.0-HiBy-R1.upt?label=firmware%20downloads" alt="Firmware downloads">
+  <img src="https://img.shields.io/badge/source%20license-GPL--3.0-green" alt="Source code license">
+</p>
+
+<p align="center">
+  <a href="https://github.com/navitanh-hash/sonix-player/releases/download/v1.0.0-ukrainian-mod/SonixOS-Ukrainian-Mod-v1.0.0-HiBy-R1.upt">
+    <img src="https://img.shields.io/badge/DOWNLOAD-FIRMWARE-0078D4?style=for-the-badge&logo=github&logoColor=white" alt="Download firmware">
+  </a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/navitanh-hash/sonix-player/releases/download/v1.0.0-ukrainian-mod/INSTALLATION.md">Installation guide</a>
+  |
+  <a href="https://github.com/navitanh-hash/sonix-player/releases/download/v1.0.0-ukrainian-mod/SHA256SUMS.txt">SHA256 checksums</a>
+  |
+  <a href="https://github.com/navitanh-hash/sonix-player/releases">All releases</a>
+</p>
+
+<p align="center">
+  45.66 MiB &middot; Ready to install &middot; No compilation required
+</p>
+
+<!-- END UKRAINIAN MOD DOWNLOAD SECTION -->
+
+>
 > This branch contains an unofficial community modification
 > for the HiBy R1, featuring animated glass power menu sliders,
 > Ukrainian QWERTY and T9 keyboard improvements,
