@@ -37,6 +37,16 @@
 // How far along (as a fraction of the track) the knob has to be on release.
 #define SLIDE_COMMIT_PCT 88
 
+// Decorative slide-to-confirm tutorial.
+#define GHOST_DURATION_MS 1500
+#define GHOST_REBOOT_DELAY_MS 750
+#define GHOST_CYCLE_MS 4000
+#define GHOST_TIMER_MS 16
+#define GHOST_MAX_OPA 191
+
+#define SLIDE_LABEL_LEFT 90
+#define SLIDE_LABEL_RIGHT 20
+
 // Horizontal inset of the knob's travel: LVGL runs the knob's CENTRE from
 // edge to edge, which hangs half of it outside the pill at both ends. Padding
 // the track by half a knob (plus a hair of margin) keeps it inside.
@@ -49,7 +59,8 @@ static lv_obj_t *panel;
 typedef struct {
 	lv_obj_t *pill; // the visible track
 	lv_obj_t *slider;
-	lv_obj_t *knob_icon;
+	lv_obj_t *ghost_knob;
+        lv_obj_t *knob_icon;
 	int knob_icon_w; // real bitmap width: the two action icons are 56 px
 	lv_obj_t *label;
 	void (*action)(void);
@@ -58,6 +69,9 @@ typedef struct {
 static slide_t slide_off;
 static slide_t slide_reboot;
 
+static lv_timer_t *ghost_timer = NULL;
+static uint32_t ghost_start_tick = 0;
+
 bool powermenu_is_open(void) { return panel && !lv_obj_is_hidden(panel); }
 
 // ---------------------------------------------------------------------------
@@ -65,6 +79,110 @@ bool powermenu_is_open(void) { return panel && !lv_obj_is_hidden(panel); }
 // ---------------------------------------------------------------------------
 
 static void slide_reset(slide_t *s);
+
+static void ghost_hide(slide_t *s) {
+    if (s->ghost_knob &&
+        !lv_obj_is_hidden(s->ghost_knob)) {
+        lv_obj_set_hidden(s->ghost_knob, true);
+    }
+}
+
+static void ghost_draw(slide_t *s, int32_t elapsed) {
+    if (!s->ghost_knob) {
+        return;
+    }
+
+    if (elapsed < 0 || elapsed >= GHOST_DURATION_MS) {
+        ghost_hide(s);
+        return;
+    }
+
+    int32_t travel = SLIDE_WIDTH - SLIDE_HEIGHT;
+
+    int32_t center = SLIDE_HEIGHT / 2
+        + travel * elapsed / GHOST_DURATION_MS;
+
+    // Quadratic fade, matching the approved preview.
+    int32_t duration_sq =
+        GHOST_DURATION_MS * GHOST_DURATION_MS;
+
+    int32_t elapsed_sq = elapsed * elapsed;
+
+    int32_t opacity = GHOST_MAX_OPA
+        * (duration_sq - elapsed_sq) / duration_sq;
+
+    lv_obj_align(
+        s->ghost_knob,
+        LV_ALIGN_LEFT_MID,
+        center - SLIDE_KNOB / 2,
+        0
+    );
+
+    lv_obj_set_style_opa_layered(
+        s->ghost_knob,
+        (lv_opa_t)opacity,
+        0
+    );
+
+    lv_obj_set_hidden(s->ghost_knob, false);
+}
+
+static void ghost_timer_cb(lv_timer_t *timer) {
+    (void)timer;
+
+    if (!powermenu_is_open()) {
+        return;
+    }
+
+    int32_t phase =
+        lv_tick_elaps(ghost_start_tick) % GHOST_CYCLE_MS;
+
+    ghost_draw(&slide_off, phase);
+
+    ghost_draw(
+        &slide_reboot,
+        phase - GHOST_REBOOT_DELAY_MS
+    );
+}
+
+static void ghost_stop(void) {
+    if (ghost_timer) {
+        lv_timer_delete(ghost_timer);
+        ghost_timer = NULL;
+    }
+
+    ghost_hide(&slide_off);
+    ghost_hide(&slide_reboot);
+}
+
+static void ghost_start(void) {
+    ghost_stop();
+
+    if (!powermenu_is_open()) {
+        return;
+    }
+
+    ghost_start_tick = lv_tick_get();
+
+    ghost_timer = lv_timer_create(
+        ghost_timer_cb,
+        GHOST_TIMER_MS,
+        NULL
+    );
+}
+
+static void ghost_panel_delete_cb(lv_event_t *e) {
+    (void)e;
+
+    if (ghost_timer) {
+        lv_timer_delete(ghost_timer);
+        ghost_timer = NULL;
+    }
+
+    slide_off.ghost_knob = NULL;
+    slide_reboot.ghost_knob = NULL;
+    panel = NULL;
+}
 
 void powermenu_show(void) {
 	if (!panel) {
@@ -77,9 +195,11 @@ void powermenu_show(void) {
 	lv_obj_set_hidden(panel, false);
 	lv_obj_move_foreground(panel);
 	power_hold_screen_on(true);
+        ghost_start();
 }
 
 static void hide(void) {
+        ghost_stop();
 	if (panel) {
 		lv_obj_set_hidden(panel, true);
 	}
@@ -98,11 +218,23 @@ void powermenu_request_show(void) { gui_post(async_show_cb, NULL); }
 // written lazily, and a DAP that loses them on every shutdown would be worse
 // than one that takes an extra moment to stop.
 static void do_power_off(void) {
+#ifdef HOST_BUILD
+        printf("[HOST TEST] Power off confirmed.\\n");
+        hide();
+        return;
+#endif
+
 	printf("power: shutting down\n");
 	power_shutdown();
 }
 
 static void do_reboot(void) {
+#ifdef HOST_BUILD
+        printf("[HOST TEST] Restart confirmed.\\n");
+        hide();
+        return;
+#endif
+
 	printf("power: rebooting\n");
 	device_state_remember_flush();
 	browser_state_flush();
@@ -165,7 +297,12 @@ static void slide_event_cb(lv_event_t *e) {
 	slide_t *s = lv_event_get_user_data(e);
 	lv_event_code_t code = lv_event_get_code(e);
 
-	if (code == LV_EVENT_VALUE_CHANGED) {
+	if (code == LV_EVENT_PRESSED) {
+                ghost_stop();
+                return;
+        }
+
+        if (code == LV_EVENT_VALUE_CHANGED) {
 		slide_track_knob(s);
 		return;
 	}
@@ -175,6 +312,7 @@ static void slide_event_cb(lv_event_t *e) {
 			s->action();
 		} else {
 			slide_reset(s); // not far enough: snap home
+                        ghost_start();
 		}
 	}
 }
@@ -202,7 +340,29 @@ static void make_slide(lv_obj_t *parent, slide_t *s, const lv_image_dsc_t *icon,
 	lv_label_set_text(s->label, tr(text));
 	lv_obj_set_style_text_font(s->label, &font_ui_24, 0);
 	lv_obj_set_style_text_color(s->label, lv_color_white(), 0);
-	lv_obj_center(s->label);
+	lv_obj_set_width(
+                s->label,
+                SLIDE_WIDTH - SLIDE_LABEL_LEFT
+                    - SLIDE_LABEL_RIGHT
+        );
+
+        lv_label_set_long_mode(
+                s->label,
+                LV_LABEL_LONG_DOT
+        );
+
+        lv_obj_set_style_text_align(
+                s->label,
+                LV_TEXT_ALIGN_LEFT,
+                0
+        );
+
+        lv_obj_align(
+                s->label,
+                LV_ALIGN_LEFT_MID,
+                SLIDE_LABEL_LEFT,
+                0
+        );
 
 	// The working part: invisible track, white disc knob.
 	s->slider = lv_slider_create(s->pill);
@@ -235,7 +395,8 @@ static void make_slide(lv_obj_t *parent, slide_t *s, const lv_image_dsc_t *icon,
 	// not to the track.
 	lv_obj_set_ext_click_area(s->slider, SLIDE_HEIGHT / 2);
 
-	lv_obj_add_event_cb(s->slider, slide_event_cb, LV_EVENT_VALUE_CHANGED, s);
+	lv_obj_add_event_cb(s->slider, slide_event_cb, LV_EVENT_PRESSED, s);
+        lv_obj_add_event_cb(s->slider, slide_event_cb, LV_EVENT_VALUE_CHANGED, s);
 	lv_obj_add_event_cb(s->slider, slide_event_cb, LV_EVENT_RELEASED, s);
 	lv_obj_add_event_cb(s->slider, slide_event_cb, LV_EVENT_PRESS_LOST, s);
 
@@ -252,11 +413,105 @@ static void make_slide(lv_obj_t *parent, slide_t *s, const lv_image_dsc_t *icon,
 	lv_obj_set_style_image_recolor_opa(s->knob_icon, LV_OPA_COVER, 0);
 	lv_obj_set_ignore_layout(s->knob_icon, true);
 
+        // A visual-only copy. Never change the real slider.
+        s->ghost_knob = lv_obj_create(s->pill);
+
+        lv_obj_remove_style_all(s->ghost_knob);
+
+        lv_obj_set_size(
+                s->ghost_knob,
+                SLIDE_KNOB,
+                SLIDE_KNOB
+        );
+
+        lv_obj_set_style_radius(
+                s->ghost_knob,
+                LV_RADIUS_CIRCLE,
+                0
+        );
+
+        lv_obj_set_style_bg_color(
+                s->ghost_knob,
+                lv_color_white(),
+                0
+        );
+
+        lv_obj_set_style_bg_opa(
+                s->ghost_knob,
+                56,
+                0
+        );
+
+        // Translucent glass outline.
+        lv_obj_set_style_border_width(
+                s->ghost_knob, 2, 0
+        );
+
+        lv_obj_set_style_border_color(
+                s->ghost_knob, lv_color_white(), 0
+        );
+
+        lv_obj_set_style_border_opa(
+                s->ghost_knob, 166, 0
+        );
+
+        lv_obj_set_style_pad_all(
+                s->ghost_knob, 0, 0
+        );
+
+        lv_obj_set_clickable(s->ghost_knob, false);
+        lv_obj_set_scrollable(s->ghost_knob, false);
+        lv_obj_set_ignore_layout(s->ghost_knob, true);
+
+        lv_obj_t *ghost_icon =
+                lv_image_create(s->ghost_knob);
+
+        lv_image_set_src(ghost_icon, icon);
+        lv_image_set_scale(ghost_icon, 200);
+
+        lv_obj_set_style_image_recolor(
+                ghost_icon,
+                lv_color_hex(0xE4E4E4),
+                0
+        );
+
+        lv_obj_set_style_image_recolor_opa(
+                ghost_icon,
+                LV_OPA_COVER,
+                0
+        );
+
+        lv_obj_set_clickable(ghost_icon, false);
+        lv_obj_set_scrollable(ghost_icon, false);
+        lv_obj_center(ghost_icon);
+
+        lv_obj_align(
+                s->ghost_knob,
+                LV_ALIGN_LEFT_MID,
+                (SLIDE_HEIGHT - SLIDE_KNOB) / 2,
+                0
+        );
+
+        lv_obj_set_style_opa_layered(
+                s->ghost_knob,
+                GHOST_MAX_OPA,
+                0
+        );
+
+        lv_obj_set_hidden(s->ghost_knob, true);
+
 	slide_track_knob(s);
 }
 
 void powermenu_init(gui_config_t *cfg) {
 	panel = lv_obj_create(lv_layer_top());
+
+        lv_obj_add_event_cb(
+                panel,
+                ghost_panel_delete_cb,
+                LV_EVENT_DELETE,
+                NULL
+        );
 	lv_obj_set_size(panel, cfg->screen_width, cfg->screen_height);
 	lv_obj_align(panel, LV_ALIGN_TOP_LEFT, 0, 0);
 	// Nearly-opaque black: the page underneath is still just visible, but the
